@@ -6,8 +6,7 @@ import android.support.v4.view.ViewPager;
 import com.example.hunghuc.forecastnow.Entity.City;
 import com.example.hunghuc.forecastnow.Entity.Weather;
 import com.example.hunghuc.forecastnow.ForecastActivity;
-import com.example.hunghuc.forecastnow.MainActivity;
-import com.example.hunghuc.forecastnow.SlideAdapter;
+import com.example.hunghuc.forecastnow.Adapter.SlideAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,8 +49,10 @@ public class GetDataOneDayFromApi extends AsyncTask<ArrayList<Weather>, Void, Ar
         try {
             if (cityList.isEmpty()) return null;
             for (City c : cityList) {
+                dataOneDay = "";dataOneHour="";
                 System.out.println("================");
-                System.out.println(c.getCity_name());
+                System.out.println("City " +c.getCity_name());
+                System.out.println(c.getKeycode());
                 //Get data for 1 day
                 String tempURL = API_LINK_ONE_DAY + c.getKeycode() + "?apikey=" + api_key;
                 URL url = new URL(tempURL);

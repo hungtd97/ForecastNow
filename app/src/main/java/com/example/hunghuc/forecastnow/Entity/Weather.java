@@ -12,11 +12,25 @@ public class Weather {
     private int temperature_realfeel;
     private String message;
     private String temperature_type;
+    private double chance_rain;
 
 
     public Weather() {
     }
 
+    public Weather(String city_name, String category, String category_day, String category_night, int temperature_current, int temperature_min, int temperature_max, int temperature_realfeel, String message, String temperature_type, double chance_rain) {
+        this.city_name = city_name;
+        this.category = category;
+        this.category_day = category_day;
+        this.category_night = category_night;
+        this.temperature_current = temperature_current;
+        this.temperature_min = temperature_min;
+        this.temperature_max = temperature_max;
+        this.temperature_realfeel = temperature_realfeel;
+        this.message = message;
+        this.temperature_type = temperature_type;
+        this.chance_rain = chance_rain;
+    }
     public Weather(String city_name, String category, int temperature_current, int temperature_min, int temperature_max, int temperature_realfeel, String message, String temperature_type) {
         this.city_name = city_name;
         this.category = category;
@@ -40,6 +54,14 @@ public class Weather {
         this.temperature_min = temperature_min;
         this.temperature_max = temperature_max;
         this.message = message;
+    }
+
+    public double getChance_rain() {
+        return chance_rain;
+    }
+
+    public void setChance_rain(double chance_rain) {
+        this.chance_rain = chance_rain;
     }
 
     public String getCity_name() {
