@@ -3,51 +3,30 @@ package com.example.hunghuc.forecastnow;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ListView;
 
-import com.example.hunghuc.forecastnow.Adapter.SlideAdapter;
+import com.example.hunghuc.forecastnow.Adapter.UserCityListAdapter;
 import com.example.hunghuc.forecastnow.Entity.City;
-import com.example.hunghuc.forecastnow.Entity.Weather;
 import com.example.hunghuc.forecastnow.SQLite.SQLiteHelper;
-import com.example.hunghuc.forecastnow.Thread.GetDataOneDayFromApi;
 
 import java.util.ArrayList;
 
-public class ForecastActivity extends AppCompatActivity {
+public class ListCityActivity extends AppCompatActivity {
 
-    private ViewPager viewPager;
-    private SlideAdapter slideAdapter;
-    public static ArrayList<Weather> forecastList;
+    private ListView listCity;
     private SQLiteHelper mySql;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forecast);
-        this.viewPager = findViewById(R.id.viewpager);
-        ArrayList<City> temp = this.getUserCity();
-        this.firstLoad(temp);
-        GetDataOneDayFromApi process = new GetDataOneDayFromApi(this, temp, getResources().getString(R.string.api_key), viewPager);
-        process.execute();
+        setContentView(R.layout.activity_list_city);
+        this.listCity = findViewById(R.id.listUserCity);
+        UserCityListAdapter adapter = new UserCityListAdapter(this, getUserCity());
+        listCity.setAdapter(adapter);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        ArrayList<City> temp = this.getUserCity();
-        this.firstLoad(temp);
-        System.out.println("After Delete:" +temp.size());
-        GetDataOneDayFromApi process = new GetDataOneDayFromApi(this, temp, getResources().getString(R.string.api_key), viewPager);
-        process.execute();
-    }
-
-    public void openMenu(View v){
-        Intent intent = new Intent(this, ListCityActivity.class);
-        startActivity(intent);
-    }
 
     private ArrayList<City> getUserCity(){
         if (mySql == null) {
@@ -70,12 +49,9 @@ public class ForecastActivity extends AppCompatActivity {
         db.close();
         return cityList;
     }
-    private void firstLoad(ArrayList<City> cityList){
-        ArrayList<Weather> weathers = new ArrayList<>();
-        for(City x: cityList){
-            weathers.add(new Weather(x.getCity_name(), "--", 0, 0, 0, 0, "--", "F"));
-        }
-        SlideAdapter slideAdapter = new SlideAdapter(this, weathers);
-        viewPager.setAdapter(slideAdapter);
+
+    public void AddNewCity(View v){
+        Intent intent = new Intent(this, CityChosenActivity.class);
+        startActivity(intent);
     }
 }

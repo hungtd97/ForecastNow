@@ -1,18 +1,35 @@
 package com.example.hunghuc.forecastnow.Entity;
 
 public class City {
+    private int id;
     private String city_code;
     private String city_name;
     private String keycode;
     private String nation_code;
     private String nation_name;
 
+    public City(int id, String city_code, String city_name, String keycode, String nation_code, String nation_name) {
+        this.id = id;
+        this.city_code = city_code;
+        this.city_name = city_name;
+        this.keycode = keycode;
+        this.nation_code = nation_code;
+        this.nation_name = nation_name;
+    }
     public City(String city_code, String city_name, String keycode, String nation_code, String nation_name) {
         this.city_code = city_code;
         this.city_name = city_name;
         this.keycode = keycode;
         this.nation_code = nation_code;
         this.nation_name = nation_name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCity_code() {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.hunghuc.forecastnow.Adapter.ListViewAdapter;
 import com.example.hunghuc.forecastnow.CityChosenActivity;
@@ -71,6 +72,7 @@ public class GetDataCity extends AsyncTask<ArrayList<City>, Void, ArrayList<City
             for (int i = 0; i < temp.length(); i++) {
                 JSONObject json = temp.getJSONObject(i);
                 if (!json.isNull("Code")&&json.getString("Code").equals("ServiceUnavailable")) {
+                    Toast.makeText(activity, "API key expired", Toast.LENGTH_SHORT).show();
                     return null;
                 }
                 if(json.isNull("ParentCity")){
