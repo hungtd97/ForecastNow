@@ -2,7 +2,7 @@
     <string name="app_name">ForecastNow</string>
     <string name="title_activity_forecast">ForecastActivity</string>
     <string name="title_city_chosen">Enter city name or code</string>
-    <string name="api_key">alQ4E4AaveDrxbOXI5jaWGOT5M1UScAD</string>
+    <string name="api_key">EAmJf0G1ab8gpnOAyBD8Gxu6w5MJdmGZ</string>
     <string name="listForecastLb1">Min Tempe</string>
     <string name="listForecastLb2">Max Tempe</string>
     <string name="listForecastLb3">Real Feel</string>

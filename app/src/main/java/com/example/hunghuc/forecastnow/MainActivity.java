@@ -20,6 +20,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,9 +34,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        MyThread process = new MyThread();
-//        GetDataOneDayFromApi process = new GetDataOneDayFromApi();
-//        process.execute();
         Intent intent = new Intent(this, ForecastActivity.class);
         startActivity(intent);
 

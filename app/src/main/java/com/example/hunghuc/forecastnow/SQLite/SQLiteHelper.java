@@ -23,7 +23,18 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "nation_code text, " +
                 "nation_name text)";
         db.execSQL(sql);
-//        sql = "CREATE TABLE Weather()";
+        sql = "CREATE TABLE Weather(" +
+                "id integer primary key autoincrement, " +
+                "city_code text, " +
+                "category text, " +
+                "message text, " +
+                "min_tempe integer, " +
+                "max_tempe integer, " +
+                "current_tempe integer, " +
+                "real_tempe integer, " +
+                "chance_rain integer, " +
+                "time real)";
+        db.execSQL(sql);
     }
 
     @Override

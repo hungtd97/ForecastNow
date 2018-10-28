@@ -37,12 +37,13 @@
 
     <Button
         android:id="@+id/btnDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete"
+        android:layout_width="25sp"
+        android:layout_height="25sp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/btndelete"
         android:textColor="#000"
         app:layout_constraintBottom_toBottomOf="@+id/txtCityName"
         app:layout_constraintEnd_toEndOf="@+id/txtCityName"
         app:layout_constraintTop_toBottomOf="@+id/txtCityName"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.44" />
 </android.support.constraint.ConstraintLayout>

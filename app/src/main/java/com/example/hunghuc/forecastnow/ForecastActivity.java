@@ -14,7 +14,10 @@ import com.example.hunghuc.forecastnow.Entity.Weather;
 import com.example.hunghuc.forecastnow.SQLite.SQLiteHelper;
 import com.example.hunghuc.forecastnow.Thread.GetDataOneDayFromApi;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ForecastActivity extends AppCompatActivity {
 
@@ -22,6 +25,7 @@ public class ForecastActivity extends AppCompatActivity {
     private SlideAdapter slideAdapter;
     public static ArrayList<Weather> forecastList;
     private SQLiteHelper mySql;
+    private boolean getApi = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +34,10 @@ public class ForecastActivity extends AppCompatActivity {
         this.viewPager = findViewById(R.id.viewpager);
         ArrayList<City> temp = this.getUserCity();
         this.firstLoad(temp);
-        GetDataOneDayFromApi process = new GetDataOneDayFromApi(this, temp, getResources().getString(R.string.api_key), viewPager);
-        process.execute();
+        if (getApi) {
+            GetDataOneDayFromApi process = new GetDataOneDayFromApi(this, temp, getResources().getString(R.string.api_key), viewPager);
+            process.execute();
+        }
     }
 
     @Override
@@ -39,17 +45,18 @@ public class ForecastActivity extends AppCompatActivity {
         super.onResume();
         ArrayList<City> temp = this.getUserCity();
         this.firstLoad(temp);
-        System.out.println("After Delete:" +temp.size());
-        GetDataOneDayFromApi process = new GetDataOneDayFromApi(this, temp, getResources().getString(R.string.api_key), viewPager);
-        process.execute();
+        if (getApi) {
+            GetDataOneDayFromApi process = new GetDataOneDayFromApi(this, temp, getResources().getString(R.string.api_key), viewPager);
+            process.execute();
+        }
     }
 
-    public void openMenu(View v){
+    public void openMenu(View v) {
         Intent intent = new Intent(this, ListCityActivity.class);
         startActivity(intent);
     }
 
-    private ArrayList<City> getUserCity(){
+    private ArrayList<City> getUserCity() {
         if (mySql == null) {
             mySql = new SQLiteHelper(getApplicationContext(), "ForecastNow", 1);
         }
@@ -70,12 +77,68 @@ public class ForecastActivity extends AppCompatActivity {
         db.close();
         return cityList;
     }
-    private void firstLoad(ArrayList<City> cityList){
+
+    private void firstLoad(ArrayList<City> cityList) {
         ArrayList<Weather> weathers = new ArrayList<>();
-        for(City x: cityList){
-            weathers.add(new Weather(x.getCity_name(), "--", 0, 0, 0, 0, "--", "F"));
+        if (mySql == null) {
+            mySql = new SQLiteHelper(this, "ForecastNow", 1);
         }
+        SQLiteDatabase db = mySql.getReadableDatabase();
+        this.getApi = false;
+        for (City x : cityList) {
+            //Check data in DB
+            String sql = "SELECT * FROM Weather";
+            Cursor cursor = db.rawQuery(sql, null);
+            int count = 0;
+            boolean checkExist = false;
+            while (cursor.moveToNext()) {
+                count++;
+                String city_code = cursor.getString(cursor.getColumnIndex("city_code"));
+                System.out.println("=============");
+                System.out.println("City code: " + city_code);
+                System.out.println(x.getKeycode());
+                if (city_code.equals(x.getKeycode())) {
+                    Date date = new Date();
+                    String strDateFormat = "yyyyMMddHHmm";
+                    DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+                    double formattedDate = Double.parseDouble(dateFormat.format(date));
+                    double weather_time = cursor.getDouble(cursor.getColumnIndex("time"));
+                    System.out.println("================");
+                    System.out.println("weather time: " + weather_time);
+                    System.out.println("current time: " + formattedDate);
+                    if ((formattedDate - weather_time) < 60) {
+                        String category = cursor.getString(cursor.getColumnIndex("category"));
+                        String message = cursor.getString(cursor.getColumnIndex("message"));
+                        int current_temperature = cursor.getInt(cursor.getColumnIndex("current_tempe"));
+                        int min_temperature = cursor.getInt(cursor.getColumnIndex("min_tempe"));
+                        int max_temperature = cursor.getInt(cursor.getColumnIndex("max_tempe"));
+                        int realfeel_temperature = cursor.getInt(cursor.getColumnIndex("real_tempe"));
+                        int chance_rain = cursor.getInt(cursor.getColumnIndex("chance_rain"));
+                        Weather weather = new Weather(x.getCity_name(), category, current_temperature, min_temperature, max_temperature, realfeel_temperature, message, chance_rain);
+                        weathers.add(weather);
+                        checkExist = true;
+                    } else {
+                        this.getApi = true;
+                        weathers.add(new Weather(x.getCity_name(), "--", 0, 0, 0, 0, "--", 0));
+                    }
+                }
+            }
+            if(!checkExist){
+                this.getApi = true;
+                weathers.add(new Weather(x.getCity_name(), "--", 0, 0, 0, 0, "--", 0));
+            }
+
+            if(count == 0){
+                this.getApi = true;
+                weathers.add(new Weather(x.getCity_name(), "--", 0, 0, 0, 0, "--", 0));
+            }
+        }
+
+        db.close();
+
         SlideAdapter slideAdapter = new SlideAdapter(this, weathers);
         viewPager.setAdapter(slideAdapter);
     }
+
+
 }

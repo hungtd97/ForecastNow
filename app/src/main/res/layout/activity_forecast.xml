@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:theme="@style/AppTheme.NoActionBar"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,16 +16,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="20sp"
-        android:layout_height="20sp"
-        android:layout_marginTop="-20sp"
-        android:onClick="openMenu"
-        android:src="@drawable/notificon"
-        android:background="@drawable/buttonedit"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/viewpager"
-        app:layout_constraintTop_toBottomOf="@+id/viewpager"
-        app:layout_constraintVertical_bias="0.0" />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="-20sp">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:layout_marginTop="-20sp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/btnsetting"
+            android:onClick="openMenu"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+    </android.support.constraint.ConstraintLayout>
 </LinearLayout>
