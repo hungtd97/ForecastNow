@@ -27,6 +27,12 @@ public class ListCityActivity extends AppCompatActivity {
         listCity.setAdapter(adapter);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        UserCityListAdapter adapter = new UserCityListAdapter(this, getUserCity());
+        listCity.setAdapter(adapter);
+    }
 
     private ArrayList<City> getUserCity(){
         if (mySql == null) {

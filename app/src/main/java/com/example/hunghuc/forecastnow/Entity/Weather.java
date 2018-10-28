@@ -12,13 +12,13 @@ public class Weather {
     private int temperature_realfeel;
     private String message;
     private String temperature_type;
-    private double chance_rain;
+    private int chance_rain;
 
 
     public Weather() {
     }
 
-    public Weather(String city_name, String category, String category_day, String category_night, int temperature_current, int temperature_min, int temperature_max, int temperature_realfeel, String message, String temperature_type, double chance_rain) {
+    public Weather(String city_name, String category, String category_day, String category_night, int temperature_current, int temperature_min, int temperature_max, int temperature_realfeel, String message, String temperature_type, int chance_rain) {
         this.city_name = city_name;
         this.category = category;
         this.category_day = category_day;
@@ -31,7 +31,7 @@ public class Weather {
         this.temperature_type = temperature_type;
         this.chance_rain = chance_rain;
     }
-    public Weather(String city_name, String category, int temperature_current, int temperature_min, int temperature_max, int temperature_realfeel, String message, String temperature_type) {
+    public Weather(String city_name, String category, int temperature_current, int temperature_min, int temperature_max, int temperature_realfeel, String message, int chance_rain) {
         this.city_name = city_name;
         this.category = category;
         this.temperature_current = temperature_current;
@@ -39,7 +39,7 @@ public class Weather {
         this.temperature_max = temperature_max;
         this.temperature_realfeel = temperature_realfeel;
         this.message = message;
-        this.temperature_type = temperature_type;
+        this.chance_rain = chance_rain;
     }
 
     public Weather(String city_name, String category, int temperature_current) {
@@ -56,11 +56,11 @@ public class Weather {
         this.message = message;
     }
 
-    public double getChance_rain() {
+    public int getChance_rain() {
         return chance_rain;
     }
 
-    public void setChance_rain(double chance_rain) {
+    public void setChance_rain(int chance_rain) {
         this.chance_rain = chance_rain;
     }
 
