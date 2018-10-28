@@ -3,6 +3,7 @@ package com.example.hunghuc.forecastnow;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,12 +27,14 @@ public class ForecastActivity extends AppCompatActivity {
     public static ArrayList<Weather> forecastList;
     private SQLiteHelper mySql;
     private boolean getApi = false;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);
         this.viewPager = findViewById(R.id.viewpager);
+        this.tabLayout = findViewById(R.id.tabDots);
         ArrayList<City> temp = this.getUserCity();
         this.firstLoad(temp);
         if (getApi) {
@@ -138,6 +141,7 @@ public class ForecastActivity extends AppCompatActivity {
 
         SlideAdapter slideAdapter = new SlideAdapter(this, weathers);
         viewPager.setAdapter(slideAdapter);
+        tabLayout.setupWithViewPager(viewPager, true);
     }
 
 
