@@ -83,6 +83,7 @@ public class ListViewAdapter extends BaseAdapter {
                     values.put("keycode", listCity.get(position).getKeycode());
                     values.put("nation_code", listCity.get(position).getNation_code());
                     values.put("nation_name", listCity.get(position).getNation_name());
+                    values.put("current_location_flag", "0");
                     long result = db.insert("City", null, values);
                     if (result != 0) {
                         Toast.makeText(cityChosenActivity, "Add new city successfully", Toast.LENGTH_LONG).show();
@@ -120,6 +121,7 @@ public class ListViewAdapter extends BaseAdapter {
                     values.put("keycode", listCity.get(position).getKeycode());
                     values.put("nation_code", listCity.get(position).getNation_code());
                     values.put("nation_name", listCity.get(position).getNation_name());
+                    values.put("current_location_flag", "0");
                     long result = db.insert("City", null, values);
                     if (result != 0) {
                         Toast.makeText(cityChosenActivity, "Add new city successfully", Toast.LENGTH_LONG).show();

@@ -73,8 +73,13 @@ public class UserCityListAdapter extends BaseAdapter {
         }else{
             myholder = (MyHolder) convertView.getTag();
         }
+        System.out.println("================");
+        System.out.println("Position " + position);
         myholder.txtCityName.setText(listCity.get(position).getCity_name());
         myholder.txtNationName.setText(listCity.get(position).getNation_name());
+        if(listCity.get(position).getCurrent_location_flag() == true){
+            myholder.btnDelete.setVisibility(View.INVISIBLE);
+        }
         return convertView;
     }
 

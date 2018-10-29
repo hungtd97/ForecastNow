@@ -18,6 +18,7 @@ import com.example.hunghuc.forecastnow.Thread.GetDataOneDayFromApi;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 public class ForecastActivity extends AppCompatActivity {
@@ -39,7 +40,7 @@ public class ForecastActivity extends AppCompatActivity {
         ArrayList<City> temp = this.getUserCity();
         this.firstLoad(temp);
         if (getApi) {
-            GetDataOneDayFromApi process = new GetDataOneDayFromApi(this.getApplication(),this, temp, getResources().getString(R.string.api_key), viewPager);
+            GetDataOneDayFromApi process = new GetDataOneDayFromApi(this.getApplication(), this, temp, getResources().getString(R.string.api_key), viewPager);
             process.execute();
         }
     }
@@ -50,7 +51,7 @@ public class ForecastActivity extends AppCompatActivity {
         ArrayList<City> temp = this.getUserCity();
         this.firstLoad(temp);
         if (getApi) {
-            GetDataOneDayFromApi process = new GetDataOneDayFromApi(this.getApplication(),this, temp, getResources().getString(R.string.api_key), viewPager);
+            GetDataOneDayFromApi process = new GetDataOneDayFromApi(this.getApplication(), this, temp, getResources().getString(R.string.api_key), viewPager);
             process.execute();
         }
     }
@@ -68,6 +69,7 @@ public class ForecastActivity extends AppCompatActivity {
         String sql = "SELECT * FROM City";
         Cursor cursor = db.rawQuery(sql, null);
         ArrayList<City> cityList = new ArrayList<>();
+        int count = 0, position = 0;
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex("id"));
             String city_code = cursor.getString(cursor.getColumnIndex("city_code"));
@@ -75,11 +77,30 @@ public class ForecastActivity extends AppCompatActivity {
             String keycode = cursor.getString(cursor.getColumnIndex("keycode"));
             String nation_code = cursor.getString(cursor.getColumnIndex("nation_code"));
             String nation_name = cursor.getString(cursor.getColumnIndex("nation_code"));
-            cityList.add(new City(id, city_code, city_name, keycode, nation_code, nation_name));
+            int flag = cursor.getInt(cursor.getColumnIndex("current_location_flag"));
+
+            if (flag == 1) {
+                position = count;
+            }
+            cityList.add(new City(id, city_code, city_name, keycode, nation_code, nation_name, (flag == 1 ? true : false)));
+            count++;
+        }
+        if (count > 0 && position != 0) {
+            swap(cityList, 0, position);
         }
         cursor.close();
         db.close();
         return cityList;
+    }
+
+    public static final <T> void swap(T[] a, int i, int j) {
+        T t = a[i];
+        a[i] = a[j];
+        a[j] = t;
+    }
+
+    public static final <T> void swap(ArrayList<T> l, int i, int j) {
+        Collections.<T>swap(l, i, j);
     }
 
     private void firstLoad(ArrayList<City> cityList) {
@@ -98,9 +119,6 @@ public class ForecastActivity extends AppCompatActivity {
             while (cursor.moveToNext()) {
                 count++;
                 String city_code = cursor.getString(cursor.getColumnIndex("city_code"));
-                System.out.println("=============");
-                System.out.println("City code: " + city_code);
-                System.out.println(x.getKeycode());
                 if (city_code.equals(x.getKeycode())) {
                     Date date = new Date();
                     String strDateFormat = "yyyyMMddHHmm";
@@ -140,7 +158,7 @@ public class ForecastActivity extends AppCompatActivity {
 
         db.close();
 
-        SlideAdapter slideAdapter = new SlideAdapter(this.getApplication(),this, weathers);
+        SlideAdapter slideAdapter = new SlideAdapter(this.getApplication(), this, weathers);
         viewPager.setAdapter(slideAdapter);
         tabLayout.setupWithViewPager(viewPager, true);
     }

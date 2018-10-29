@@ -37,6 +37,7 @@ public class GetDataCity extends AsyncTask<ArrayList<City>, Void, ArrayList<City
     private ListView listView;
     private String api_key="";
     private CityChosenActivity activity;
+    private boolean currentCity = false;
 
     public GetDataCity(CityChosenActivity activity, String api_key, ListView listView, String key_search) {
         this.key_search = key_search;
@@ -85,7 +86,7 @@ public class GetDataCity extends AsyncTask<ArrayList<City>, Void, ArrayList<City
                 city_code = json.getJSONObject("AdministrativeArea").getString("ID");
                 nation_code = json.getJSONObject("Country").getString("ID");
                 nation_name = json.getJSONObject("Country").getString("LocalizedName");
-                cityList.add(new City(city_code, city_name, city_key, nation_code, nation_name));
+                cityList.add(new City(city_code, city_name, city_key, nation_code, nation_name, this.currentCity));
             }
             return cityList;
 

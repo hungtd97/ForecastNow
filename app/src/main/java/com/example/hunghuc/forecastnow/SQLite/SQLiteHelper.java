@@ -21,7 +21,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "city_name text," +
                 "keycode text, " +
                 "nation_code text, " +
-                "nation_name text)";
+                "nation_name text, " +
+                "current_location_flag integer)";
         db.execSQL(sql);
         sql = "CREATE TABLE Weather(" +
                 "id integer primary key autoincrement, " +
