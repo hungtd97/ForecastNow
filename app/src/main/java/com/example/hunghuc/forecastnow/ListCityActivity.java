@@ -85,7 +85,8 @@ public class ListCityActivity extends AppCompatActivity {
             String keycode = cursor.getString(cursor.getColumnIndex("keycode"));
             String nation_code = cursor.getString(cursor.getColumnIndex("nation_code"));
             String nation_name = cursor.getString(cursor.getColumnIndex("nation_code"));
-            cityList.add(new City(id, city_code, city_name, keycode, nation_code, nation_name));
+            int currentCity = cursor.getInt(cursor.getColumnIndex("current_location_flag"));
+            cityList.add(new City(id, city_code, city_name, keycode, nation_code, nation_name, (currentCity == 1 ? true:false)));
         }
         cursor.close();
         db.close();

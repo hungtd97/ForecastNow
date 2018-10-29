@@ -7,25 +7,36 @@ public class City {
     private String keycode;
     private String nation_code;
     private String nation_name;
+    private boolean current_location_flag;
 
-    public City(int id, String city_code, String city_name, String keycode, String nation_code, String nation_name) {
+    public City(int id, String city_code, String city_name, String keycode, String nation_code, String nation_name, boolean current_location_flag) {
         this.id = id;
         this.city_code = city_code;
         this.city_name = city_name;
         this.keycode = keycode;
         this.nation_code = nation_code;
         this.nation_name = nation_name;
+        this.current_location_flag = current_location_flag;
     }
-    public City(String city_code, String city_name, String keycode, String nation_code, String nation_name) {
+    public City(String city_code, String city_name, String keycode, String nation_code, String nation_name, boolean current_location_flag) {
         this.city_code = city_code;
         this.city_name = city_name;
         this.keycode = keycode;
         this.nation_code = nation_code;
         this.nation_name = nation_name;
+        this.current_location_flag = current_location_flag;
     }
 
     public int getId() {
         return id;
+    }
+
+    public boolean getCurrent_location_flag() {
+        return current_location_flag;
+    }
+
+    public void setCurrent_location_flag(boolean current_location_flag) {
+        this.current_location_flag = current_location_flag;
     }
 
     public void setId(int id) {
