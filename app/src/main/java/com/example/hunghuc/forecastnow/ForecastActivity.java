@@ -3,6 +3,7 @@ package com.example.hunghuc.forecastnow;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,16 +27,19 @@ public class ForecastActivity extends AppCompatActivity {
     public static ArrayList<Weather> forecastList;
     private SQLiteHelper mySql;
     private boolean getApi = false;
+    private TabLayout tabLayout;
+    private final int TIME_LIMIT = 60;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);
         this.viewPager = findViewById(R.id.viewpager);
+        this.tabLayout = findViewById(R.id.tabDots);
         ArrayList<City> temp = this.getUserCity();
         this.firstLoad(temp);
         if (getApi) {
-            GetDataOneDayFromApi process = new GetDataOneDayFromApi(this, temp, getResources().getString(R.string.api_key), viewPager);
+            GetDataOneDayFromApi process = new GetDataOneDayFromApi(this.getApplication(),this, temp, getResources().getString(R.string.api_key), viewPager);
             process.execute();
         }
     }
@@ -46,7 +50,7 @@ public class ForecastActivity extends AppCompatActivity {
         ArrayList<City> temp = this.getUserCity();
         this.firstLoad(temp);
         if (getApi) {
-            GetDataOneDayFromApi process = new GetDataOneDayFromApi(this, temp, getResources().getString(R.string.api_key), viewPager);
+            GetDataOneDayFromApi process = new GetDataOneDayFromApi(this.getApplication(),this, temp, getResources().getString(R.string.api_key), viewPager);
             process.execute();
         }
     }
@@ -106,7 +110,7 @@ public class ForecastActivity extends AppCompatActivity {
                     System.out.println("================");
                     System.out.println("weather time: " + weather_time);
                     System.out.println("current time: " + formattedDate);
-                    if ((formattedDate - weather_time) < 60) {
+                    if ((formattedDate - weather_time) < TIME_LIMIT) {
                         String category = cursor.getString(cursor.getColumnIndex("category"));
                         String message = cursor.getString(cursor.getColumnIndex("message"));
                         int current_temperature = cursor.getInt(cursor.getColumnIndex("current_tempe"));
@@ -123,12 +127,12 @@ public class ForecastActivity extends AppCompatActivity {
                     }
                 }
             }
-            if(!checkExist){
+            if (!checkExist) {
                 this.getApi = true;
                 weathers.add(new Weather(x.getCity_name(), "--", 0, 0, 0, 0, "--", 0));
             }
 
-            if(count == 0){
+            if (count == 0) {
                 this.getApi = true;
                 weathers.add(new Weather(x.getCity_name(), "--", 0, 0, 0, 0, "--", 0));
             }
@@ -136,8 +140,9 @@ public class ForecastActivity extends AppCompatActivity {
 
         db.close();
 
-        SlideAdapter slideAdapter = new SlideAdapter(this, weathers);
+        SlideAdapter slideAdapter = new SlideAdapter(this.getApplication(),this, weathers);
         viewPager.setAdapter(slideAdapter);
+        tabLayout.setupWithViewPager(viewPager, true);
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.hunghuc.forecastnow.Adapter;
 
+import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 
 import com.example.hunghuc.forecastnow.Entity.Weather;
 import com.example.hunghuc.forecastnow.Function.Function;
+import com.example.hunghuc.forecastnow.Function.GlobalVariable;
+import com.example.hunghuc.forecastnow.MainActivity;
 import com.example.hunghuc.forecastnow.R;
 
 import java.util.ArrayList;
@@ -21,10 +24,13 @@ public class SlideAdapter extends PagerAdapter {
     LayoutInflater inflater;
     ArrayList<Weather> cityList;
     Function function = new Function();
+    private boolean typeTempe = false;
+    private String tempe = "", minTempe = "", maxTempe = "", realTempe = "";
 
-    public SlideAdapter(Context context, ArrayList<Weather> cityList) {
+    public SlideAdapter(Application application, Context context, ArrayList<Weather> cityList) {
         this.context = context;
         this.cityList = cityList;
+        this.typeTempe = ((GlobalVariable) application).isTempeType();
     }
 
     @Override
@@ -55,10 +61,17 @@ public class SlideAdapter extends PagerAdapter {
         currentCity = cityList.get(position);
         txtCity.setText(currentCity.getCity_name());
         txtCategory.setText(currentCity.getCategory());
-        String tempe = function.convertIntTempe(currentCity.getTemperature_current()) + "°";
-        String minTempe = function.convertIntTempe(currentCity.getTemperature_min()) + "°";
-        String maxTempe = function.convertIntTempe(currentCity.getTemperature_max()) +  "°" ;
-        String realTempe = function.convertIntTempe(currentCity.getTemperature_realfeel()) + "°" ;
+        if (typeTempe) {
+            tempe = function.convertIntTempe(currentCity.getTemperature_current()) + "°";
+            minTempe = function.convertIntTempe(currentCity.getTemperature_min()) + "°";
+            maxTempe = function.convertIntTempe(currentCity.getTemperature_max()) + "°";
+            realTempe = function.convertIntTempe(currentCity.getTemperature_realfeel()) + "°";
+        }else{
+            tempe = currentCity.getTemperature_current() + "°";
+            minTempe = currentCity.getTemperature_min() + "°";
+            maxTempe = currentCity.getTemperature_max() + "°";
+            realTempe = currentCity.getTemperature_realfeel() + "°";
+        }
         String chance_rain = String.valueOf(currentCity.getChance_rain()) + "%";
         txtTemparature.setText(tempe);
         txtMinTempe.setText(minTempe);
