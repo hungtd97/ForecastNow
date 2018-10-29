@@ -1,5 +1,6 @@
 package com.example.hunghuc.forecastnow.Thread;
 
+import android.app.Application;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -36,6 +37,7 @@ public class GetDataOneDayFromApi extends AsyncTask<ArrayList<Weather>, Void, Ar
     private ViewPager viewPager;
     private ForecastActivity activity;
     private SQLiteHelper mySql;
+    private Application application;
 
     //Result Data
     String category = "", message = "", day_category = "", night_category = "", type_day = "";
@@ -45,10 +47,11 @@ public class GetDataOneDayFromApi extends AsyncTask<ArrayList<Weather>, Void, Ar
     private final String API_LINK_ONE_HOUR = "http://dataservice.accuweather.com/forecasts/v1/hourly/1hour/";
     private final String API_DETAIL = "true";
 
-    public GetDataOneDayFromApi(ForecastActivity activity, ArrayList<City> cityList, String api_key, ViewPager viewPager) {
+    public GetDataOneDayFromApi(Application application, ForecastActivity activity, ArrayList<City> cityList, String api_key, ViewPager viewPager) {
         this.cityList = cityList;
         this.activity = activity;
         this.api_key = api_key;
+        this.application = application;
         this.viewPager = viewPager;
     }
 
@@ -206,7 +209,7 @@ public class GetDataOneDayFromApi extends AsyncTask<ArrayList<Weather>, Void, Ar
     @Override
     protected void onPostExecute(ArrayList<Weather> weathers) {
         if (weathers != null && !weathers.isEmpty()) {
-            SlideAdapter slideAdapter = new SlideAdapter(activity, weathers);
+            SlideAdapter slideAdapter = new SlideAdapter(application ,activity, weathers);
             viewPager.setAdapter(slideAdapter);
         }
     }

@@ -35,6 +35,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "chance_rain integer, " +
                 "time real)";
         db.execSQL(sql);
+        sql = "CREATE TABLE Configs(" +
+                "id integer primary key autoincrement, " +
+                "name text," +
+                "value text)";
+        db.execSQL(sql);
     }
 
     @Override
