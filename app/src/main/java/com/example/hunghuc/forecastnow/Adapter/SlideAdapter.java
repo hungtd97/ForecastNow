@@ -7,6 +7,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -57,6 +58,7 @@ public class SlideAdapter extends PagerAdapter {
         TextView txtRealTempe = view.findViewById(R.id.txtRealTempe);
         TextView txtChanceRain = view.findViewById(R.id.txtChanceRain);
         TextView txtText = view.findViewById(R.id.txtText);
+        ImageView imageView = view.findViewById(R.id.categoryImage);
         Weather currentCity = new Weather();
         currentCity = cityList.get(position);
         txtCity.setText(currentCity.getCity_name());
@@ -73,6 +75,10 @@ public class SlideAdapter extends PagerAdapter {
             realTempe = currentCity.getTemperature_realfeel() + "°";
         }
         String chance_rain = String.valueOf(currentCity.getChance_rain()) + "%";
+        int image_path = function.iconClassify(cityList.get(position).getCategory(), cityList.get(position).getLocation_time());
+        System.out.println("===============");
+        System.out.println("Image path" + image_path);
+        imageView.setImageResource(image_path);
         txtTemparature.setText(tempe);
         txtMinTempe.setText(minTempe);
         txtMaxTempe.setText(maxTempe);
@@ -87,4 +93,6 @@ public class SlideAdapter extends PagerAdapter {
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((LinearLayout) object);
     }
+
+
 }

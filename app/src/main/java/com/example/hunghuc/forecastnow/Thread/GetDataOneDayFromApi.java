@@ -26,6 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,9 +41,12 @@ public class GetDataOneDayFromApi extends AsyncTask<ArrayList<Weather>, Void, Ar
     private Application application;
 
     //Result Data
-    String category = "", message = "", day_category = "", night_category = "", type_day = "";
+    String category = "", message = "", day_category = "", night_category = "", type_day = "", date_time = "";
     int min_temperature = 0, max_temperature = 0, current_temperature = 0, realfeel_temperature = 0, chance_rain = 0;
     private String api_key = "";
+    private final String DAY_END = "16:00:00";
+    private final String DAY_START = "05:00:00";
+    private final String SHORT_DAY = "1600";
     private final String API_LINK_ONE_DAY = "http://dataservice.accuweather.com/forecasts/v1/daily/1day/";
     private final String API_LINK_ONE_HOUR = "http://dataservice.accuweather.com/forecasts/v1/hourly/1hour/";
     private final String API_DETAIL = "true";
@@ -74,6 +78,7 @@ public class GetDataOneDayFromApi extends AsyncTask<ArrayList<Weather>, Void, Ar
         values.put("real_tempe", e.getTemperature_realfeel());
         values.put("chance_rain", e.getChance_rain());
         values.put("time", formattedDate);
+        values.put("location_time", e.getLocation_time());
         if(type.equals("add")){
             long result = db.insert("Weather", null, values);
             if (result == 0) {
@@ -117,6 +122,26 @@ public class GetDataOneDayFromApi extends AsyncTask<ArrayList<Weather>, Void, Ar
         return 0;
     }
 
+    private int nightCheck(String timer){
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        try {
+            Date d1 = sdf.parse(timer);
+            Date d2 = sdf.parse(DAY_START);
+            Date d3 = sdf.parse(DAY_END);
+            System.out.println("Timer: " + timer);
+            if((d1.getTime() - d2.getTime()) > 0 && (d1.getTime() - d3.getTime()) < 0){
+                System.out.println("Day");
+                return 1;
+            }else{
+                System.out.println("Night");
+                return 2;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     @Override
     protected ArrayList<Weather> doInBackground(ArrayList<Weather>... arrayLists) {
         Date date = new Date();
@@ -130,8 +155,8 @@ public class GetDataOneDayFromApi extends AsyncTask<ArrayList<Weather>, Void, Ar
                 dataOneDay = "";
                 dataOneHour = "";
 
-                //Get data for 1 day
-                String tempURL = API_LINK_ONE_DAY + c.getKeycode() + "?apikey=" + api_key+ "&details=" + API_DETAIL;
+                //Get data for 1 Hour
+                String tempURL = API_LINK_ONE_HOUR + c.getKeycode() + "?apikey=" + api_key + "&details=" + API_DETAIL;
                 URL url = new URL(tempURL);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream = httpURLConnection.getInputStream();
@@ -140,26 +165,19 @@ public class GetDataOneDayFromApi extends AsyncTask<ArrayList<Weather>, Void, Ar
                 while (line != null) {
                     line = bufferedReader.readLine();
                     if (line == null) break;
-                    dataOneDay += line;
+                    dataOneHour += line;
                 }
                 System.out.println(tempURL);
-                JSONObject temp = new JSONObject(dataOneDay);
-                JSONArray tempJsonarray = temp.getJSONArray("DailyForecasts");
-                min_temperature = tempJsonarray.getJSONObject(0).getJSONObject("Temperature").getJSONObject("Minimum").getInt("Value");
-                max_temperature = tempJsonarray.getJSONObject(0).getJSONObject("Temperature").getJSONObject("Maximum").getInt("Value");
-                if((Integer.parseInt(currentTime) - Integer.parseInt("1600")) > 0){
-                    type_day = "Night";
-                }else{
-                    type_day = "Day";
-                }
-                category = tempJsonarray.getJSONObject(0).getJSONObject(type_day).getString("IconPhrase");
-                message = tempJsonarray.getJSONObject(0).getJSONObject(type_day).getString("LongPhrase");
-                double temp_chance_rain = tempJsonarray.getJSONObject(0).getJSONObject(type_day).getJSONObject("Rain").getDouble("Value");
-                temp_chance_rain *= 100;
-                chance_rain= (int) temp_chance_rain;
+                JSONArray tempJsonarray = new JSONArray(dataOneHour);
+                date_time = tempJsonarray.getJSONObject(0).getString("DateTime");
+                current_temperature = tempJsonarray.getJSONObject(0).getJSONObject("Temperature").getInt("Value");
+                realfeel_temperature = tempJsonarray.getJSONObject(0).getJSONObject("RealFeelTemperature").getInt("Value");
+                date_time = date_time.substring(11, 19);
+                int temp_date_time = this.nightCheck(date_time);
 
-                //Get data for 1 Hour
-                tempURL = API_LINK_ONE_HOUR + c.getKeycode() + "?apikey=" + api_key + "&details=" + API_DETAIL;
+
+                //Get data for 1 Day
+                tempURL = API_LINK_ONE_DAY + c.getKeycode() + "?apikey=" + api_key+ "&details=" + API_DETAIL;
                 url = new URL(tempURL);
                 httpURLConnection = (HttpURLConnection) url.openConnection();
                 inputStream = httpURLConnection.getInputStream();
@@ -168,19 +186,27 @@ public class GetDataOneDayFromApi extends AsyncTask<ArrayList<Weather>, Void, Ar
                 while (line != null) {
                     line = bufferedReader.readLine();
                     if (line == null) break;
-                    dataOneHour += line;
+                    dataOneDay += line;
                 }
+                System.out.println(tempURL);
+                JSONObject temp = new JSONObject(dataOneDay);
+                tempJsonarray = temp.getJSONArray("DailyForecasts");
+                min_temperature = tempJsonarray.getJSONObject(0).getJSONObject("Temperature").getJSONObject("Minimum").getInt("Value");
+                max_temperature = tempJsonarray.getJSONObject(0).getJSONObject("Temperature").getJSONObject("Maximum").getInt("Value");
+                if(temp_date_time == 2){
+                    type_day = "Night";
+                }else{
+                    type_day = "Day";
+                }
+                category = tempJsonarray.getJSONObject(0).getJSONObject(type_day).getString("IconPhrase");
+                message = tempJsonarray.getJSONObject(0).getJSONObject(type_day).getString("LongPhrase");
+                double temp_chance_rain = tempJsonarray.getJSONObject(0).getJSONObject(type_day).getDouble("RainProbability");
+                chance_rain= (int) temp_chance_rain;
                 System.out.println("========");
                 System.out.println("City Code: " + c.getKeycode());
                 System.out.println("Type day" + type_day);
-                System.out.println("Chance of rain" + chance_rain);
-                System.out.println("Category: " + category);
-                System.out.println("message: " + message);
-                System.out.println(tempURL);
-                tempJsonarray = new JSONArray(dataOneHour);
-                current_temperature = tempJsonarray.getJSONObject(0).getJSONObject("Temperature").getInt("Value");
-                realfeel_temperature = tempJsonarray.getJSONObject(0).getJSONObject("RealFeelTemperature").getInt("Value");
-                Weather weather = new Weather(c.getCity_name(), category, current_temperature, min_temperature, max_temperature, realfeel_temperature, message, chance_rain);
+
+                Weather weather = new Weather(c.getCity_name(), category, current_temperature, min_temperature, max_temperature, realfeel_temperature, message, chance_rain, temp_date_time);
                 int id = this.checkExist(c.getKeycode());
                 if(id != 0){
                     this.saveWeather(weather, c, "update", id);

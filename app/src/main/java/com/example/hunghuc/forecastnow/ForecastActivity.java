@@ -103,6 +103,17 @@ public class ForecastActivity extends AppCompatActivity {
         Collections.<T>swap(l, i, j);
     }
 
+    public void reload(View v){
+        ArrayList<City> temp = this.getUserCity();
+        this.firstLoad(temp);
+        if (getApi) {
+            System.out.println("=========");
+            System.out.println("Reload API");
+            GetDataOneDayFromApi process = new GetDataOneDayFromApi(this.getApplication(), this, temp, getResources().getString(R.string.api_key), viewPager);
+            process.execute();
+        }
+    }
+
     private void firstLoad(ArrayList<City> cityList) {
         ArrayList<Weather> weathers = new ArrayList<>();
         if (mySql == null) {
@@ -136,23 +147,24 @@ public class ForecastActivity extends AppCompatActivity {
                         int max_temperature = cursor.getInt(cursor.getColumnIndex("max_tempe"));
                         int realfeel_temperature = cursor.getInt(cursor.getColumnIndex("real_tempe"));
                         int chance_rain = cursor.getInt(cursor.getColumnIndex("chance_rain"));
-                        Weather weather = new Weather(x.getCity_name(), category, current_temperature, min_temperature, max_temperature, realfeel_temperature, message, chance_rain);
+                        int location_time = cursor.getInt(cursor.getColumnIndex("location_time"));
+                        Weather weather = new Weather(x.getCity_name(), category, current_temperature, min_temperature, max_temperature, realfeel_temperature, message, chance_rain, location_time);
                         weathers.add(weather);
                         checkExist = true;
                     } else {
                         this.getApi = true;
-                        weathers.add(new Weather(x.getCity_name(), "--", 0, 0, 0, 0, "--", 0));
+                        weathers.add(new Weather(x.getCity_name(), "--", 0, 0, 0, 0, "--", 0, 0));
                     }
                 }
             }
             if (!checkExist) {
                 this.getApi = true;
-                weathers.add(new Weather(x.getCity_name(), "--", 0, 0, 0, 0, "--", 0));
+                weathers.add(new Weather(x.getCity_name(), "--", 0, 0, 0, 0, "--", 0, 0));
             }
 
             if (count == 0) {
                 this.getApi = true;
-                weathers.add(new Weather(x.getCity_name(), "--", 0, 0, 0, 0, "--", 0));
+                weathers.add(new Weather(x.getCity_name(), "--", 0, 0, 0, 0, "--", 0, 0));
             }
         }
 

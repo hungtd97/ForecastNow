@@ -34,6 +34,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "current_tempe integer, " +
                 "real_tempe integer, " +
                 "chance_rain integer, " +
+                "location_time integer," +
                 "time real)";
         db.execSQL(sql);
         sql = "CREATE TABLE Configs(" +
