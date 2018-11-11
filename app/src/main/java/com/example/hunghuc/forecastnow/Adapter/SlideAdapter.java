@@ -2,7 +2,9 @@ package com.example.hunghuc.forecastnow.Adapter;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,8 +78,11 @@ public class SlideAdapter extends PagerAdapter {
         }
         String chance_rain = String.valueOf(currentCity.getChance_rain()) + "%";
         int image_path = function.iconClassify(cityList.get(position).getCategory(), cityList.get(position).getLocation_time());
-        System.out.println("===============");
-        System.out.println("Image path" + image_path);
+        String color = function.colorClassify(cityList.get(position).getCategory(), cityList.get(position).getLocation_time());
+        System.out.println("=============");
+        System.out.println(color);
+        if(color.equals("")) color = "#000000";
+        layoutSlide.setBackgroundColor(Color.parseColor(color));
         imageView.setImageResource(image_path);
         txtTemparature.setText(tempe);
         txtMinTempe.setText(minTempe);

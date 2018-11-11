@@ -5,7 +5,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.ViewPager;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.hunghuc.forecastnow.Entity.City;
