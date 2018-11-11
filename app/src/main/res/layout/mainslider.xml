@@ -13,39 +13,41 @@
     <TextView
         android:id="@+id/txtCity"
         android:layout_width="250dp"
-        android:layout_height="70dp"
+        android:layout_height="57dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="TextView"
-        android:textColor="#000"
+        android:textColor="#fff"
         android:textSize="28dp" />
 
     <ImageView
         android:id="@+id/categoryImage"
         android:layout_width="match_parent"
-        android:layout_height="100sp"
+        android:layout_height="65dp"
         android:layout_weight="1"
         app:srcCompat="@android:color/background_light" />
 
     <TextView
         android:id="@+id/txtCategory"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="15dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="TextView"
-        android:textColor="#000"
+        android:textColor="#fff"
         android:textSize="23sp" />
 
     <TextView
         android:id="@+id/txtTemparature"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="21dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="TextView"
-        android:textColor="#000"
-        android:textSize="30sp" />
+        android:textColor="#fff"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/txtText"
@@ -56,12 +58,13 @@
         android:paddingLeft="70sp"
         android:paddingRight="70sp"
         android:text="TextView"
-        android:textColor="#000" />
+        android:textColor="#fff" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="140sp"
-        android:layout_weight="1">
+        android:layout_height="200sp"
+        android:layout_weight="1"
+        tools:layout_editor_absoluteY="393dp">
 
         <TextView
             android:id="@+id/txtMinTempe"
@@ -72,7 +75,7 @@
             android:layout_marginBottom="20dp"
             android:gravity="center"
             android:text="TextView"
-            android:textColor="#000"
+            android:textColor="#fff"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/textView11"
             app:layout_constraintEnd_toStartOf="@+id/txtMaxTempe"
@@ -87,7 +90,7 @@
             android:layout_marginBottom="18dp"
             android:gravity="center"
             android:text="TextView"
-            android:textColor="#000"
+            android:textColor="#fff"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/textView13"
             app:layout_constraintEnd_toEndOf="parent"
@@ -103,7 +106,7 @@
             android:layout_marginEnd="59dp"
             android:gravity="center_horizontal"
             android:text="@string/listForecastLb1"
-            android:textColor="#000"
+            android:textColor="#fff"
             app:layout_constraintBottom_toTopOf="@+id/txtMinTempe"
             app:layout_constraintEnd_toStartOf="@+id/textView9"
             app:layout_constraintStart_toStartOf="parent"
@@ -117,7 +120,7 @@
             android:layout_marginEnd="40dp"
             android:gravity="center_horizontal"
             android:text="@string/listForecastLb2"
-            android:textColor="#000"
+            android:textColor="#fff"
             app:layout_constraintBottom_toTopOf="@+id/txtMaxTempe"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView8"
@@ -131,7 +134,7 @@
             android:layout_marginEnd="59dp"
             android:gravity="center_horizontal"
             android:text="@string/listForecastLb3"
-            android:textColor="#000"
+            android:textColor="#fff"
             app:layout_constraintBottom_toTopOf="@+id/txtRealTempe"
             app:layout_constraintEnd_toStartOf="@+id/textView13"
             app:layout_constraintStart_toStartOf="parent"
@@ -146,7 +149,7 @@
             android:layout_marginBottom="21dp"
             android:gravity="center"
             android:text="TextView"
-            android:textColor="#000"
+            android:textColor="#fff"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/textView13"
@@ -160,7 +163,7 @@
             android:layout_marginEnd="40dp"
             android:gravity="center_horizontal"
             android:text="@string/listForecastLb4"
-            android:textColor="#000"
+            android:textColor="#fff"
             app:layout_constraintBottom_toTopOf="@+id/txtChanceRain"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView11"
@@ -174,7 +177,7 @@
             android:layout_marginBottom="16dp"
             android:gravity="center"
             android:text="TextView"
-            android:textColor="#000"
+            android:textColor="#fff"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

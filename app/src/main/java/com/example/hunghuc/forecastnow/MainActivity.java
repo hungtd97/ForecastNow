@@ -15,10 +15,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -51,64 +53,114 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private SQLiteHelper mySql;
     private LocationManager locationManager;
     private String provider;
+    public final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.getTempeType();
-
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        Criteria criteria = new Criteria();
-        provider = locationManager.getBestProvider(criteria, false);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Here, thisActivity is the current activity
+            this.makeLocationPermission();
+        } else {
+            this.getTempeType();
+
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+            Criteria criteria = new Criteria();
+            provider = locationManager.getBestProvider(criteria, false);
+            Location location = locationManager.getLastKnownLocation(provider);
+
+            if (location != null) {
+                System.out.println("=================");
+                System.out.println("Provider " + provider + " has been selected.");
+                onLocationChanged(location);
+            } else {
+                System.out.println("=================");
+                System.out.println("Location not available");
+                System.out.println("Location not available");
+            }
+
+            Intent intent = new Intent(this, ForecastActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    private void makeLocationPermission() {
+        try {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        1);
+
+                // MY_PERMISSIONS_REQUEST_FINE_LOCATION is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
 
 
-                // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION)) {
+        } catch (Exception ex) {
 
-                    // Show an expanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    }
+                    this.getTempeType();
+                    System.out.println("=====================");
+                    System.out.println("Permission granted  ");
+
+                    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    Criteria criteria = new Criteria();
+                    provider = locationManager.getBestProvider(criteria, false);
+                    Location location = locationManager.getLastKnownLocation(provider);
+
+                    if (location != null) {
+                        System.out.println("=================");
+                        System.out.println("Provider " + provider + " has been selected.");
+                        onLocationChanged(location);
+                    } else {
+                        System.out.println("=================");
+                        System.out.println("Location not available");
+                        System.out.println("Location not available");
+                    }
+
+                    Intent intent = new Intent(this, ForecastActivity.class);
+                    startActivity(intent);
+                    finish();
 
                 } else {
 
-                    // No explanation needed, we can request the permission.
-
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                            1);
-
-                    // MY_PERMISSIONS_REQUEST_FINE_LOCATION is an
-                    // app-defined int constant. The callback method gets the
-                    // result of the request.
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
                 }
+                return;
+            }
 
+            // other 'case' lines to check for other
+            // permissions this app might request
         }
-        Location location = locationManager.getLastKnownLocation(provider);
-
-
-        if (location != null) {
-            System.out.println("=================");
-            System.out.println("Provider " + provider + " has been selected.");
-            onLocationChanged(location);
-        } else {
-            System.out.println("=================");
-            System.out.println("Location not available");
-            System.out.println("Location not available");
-        }
-
-        Intent intent = new Intent(this, ForecastActivity.class);
-        startActivity(intent);
-
     }
 
     private void getTempeType() {
         String type = checkExist();
-        if(type.equals("")){
+        if (type.equals("")) {
             if (mySql == null) {
                 mySql = new SQLiteHelper(this, "ForecastNow", 1);
             }
@@ -119,9 +171,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             db.insert("Configs", null, values);
             ((GlobalVariable) this.getApplication()).setTempeType(true);
             db.close();
-        }else if(type.equals("C")){
+        } else if (type.equals("C")) {
             ((GlobalVariable) this.getApplication()).setTempeType(true);
-        }else if(type.equals("F")){
+        } else if (type.equals("F")) {
             ((GlobalVariable) this.getApplication()).setTempeType(false);
         }
     }

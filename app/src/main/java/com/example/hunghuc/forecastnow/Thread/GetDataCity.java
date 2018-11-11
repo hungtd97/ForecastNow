@@ -10,8 +10,6 @@ import com.example.hunghuc.forecastnow.Adapter.ListViewAdapter;
 import com.example.hunghuc.forecastnow.CityChosenActivity;
 import com.example.hunghuc.forecastnow.Entity.City;
 import com.example.hunghuc.forecastnow.Entity.Weather;
-import com.example.hunghuc.forecastnow.MainActivity;
-import com.example.hunghuc.forecastnow.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;

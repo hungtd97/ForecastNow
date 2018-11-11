@@ -3,11 +3,13 @@ package com.example.hunghuc.forecastnow;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.example.hunghuc.forecastnow.Adapter.SlideAdapter;
 import com.example.hunghuc.forecastnow.Entity.City;
@@ -24,7 +26,7 @@ import java.util.Date;
 public class ForecastActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
-    private SlideAdapter slideAdapter;
+    private LinearLayout sliderlayout;
     public static ArrayList<Weather> forecastList;
     private SQLiteHelper mySql;
     private boolean getApi = false;

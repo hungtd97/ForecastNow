@@ -15,6 +15,26 @@ public class Function {
         int result = 0;
         if (category.equalsIgnoreCase("Sunny")) {
             result = R.raw.sunny;
+        }else if(category.equalsIgnoreCase("Partly Cloudy") && dayType == 2){
+            result = R.raw.partly_cloudy;
+        }else if(category.equalsIgnoreCase("Intermittent Clouds") && dayType == 2){
+            result = R.raw.night_intermitten_clouds;
+        }else if(category.equalsIgnoreCase("Hazy Moonlight") && dayType == 2){
+            result = R.raw.night_hazy_moonlight;
+        }else if(category.equalsIgnoreCase("Mostly Cloudy") && dayType == 2){
+            result = R.raw.night_mostly_cloudy;
+        }else if(category.contains("Partly cloudy") && category.contains("showers") && dayType == 2){
+            result = R.raw.night_partly_cloudy_showers;
+        }else if(category.contains("Mostly cloudy") && category.contains("showers") && dayType == 2){
+            result = R.raw.night_mostly_cloudy_showers;
+        }else if(category.contains("Partly cloudy") && category.contains("t-storms") && dayType == 2){
+            result = R.raw.night_partly_cloudy_t_storms;
+        }else if(category.contains("Mostly cloudy") && category.contains("t-storms") && dayType == 2){
+            result = R.raw.night_mostly_cloudy_t_storms;
+        }else if(category.contains("Mostly cloudy") && category.contains("flurries") && dayType == 2){
+            result = R.raw.night_mostly_cloudy_flurries;
+        }else if(category.contains("Mostly cloudy") && category.contains("snow") && dayType == 2){
+            result = R.raw.night_mostly_cloudy_snow;
         } else if (category.equalsIgnoreCase("Mostly Sunny")) {
             result = R.raw.mostly_sunny;
         } else if (category.equalsIgnoreCase("Partly Sunny")) {
@@ -73,26 +93,94 @@ public class Function {
             result = R.raw.night_clear;
         }else if(category.equalsIgnoreCase("Mostly Clear")){
             result = R.raw.mostly_clear;
+        }
+        return result;
+    }
+
+    public String colorClassify(String category, int dayType){
+        String result = "";
+        if (category.equalsIgnoreCase("Sunny")) {
+            result = "#00bbe3";
         }else if(category.equalsIgnoreCase("Partly Cloudy") && dayType == 2){
-            result = R.raw.partly_cloudy;
+            result = "#41474b";
         }else if(category.equalsIgnoreCase("Intermittent Clouds") && dayType == 2){
-            result = R.raw.night_intermitten_clouds;
+            result = "#41474b";
         }else if(category.equalsIgnoreCase("Hazy Moonlight") && dayType == 2){
-            result = R.raw.night_hazy_moonlight;
+            result = "#41474b";
         }else if(category.equalsIgnoreCase("Mostly Cloudy") && dayType == 2){
-            result = R.raw.night_mostly_cloudy;
+            result = "#41474b";
         }else if(category.contains("Partly cloudy") && category.contains("showers") && dayType == 2){
-            result = R.raw.night_partly_cloudy_showers;
+            result = "#4c6f83";
         }else if(category.contains("Mostly cloudy") && category.contains("showers") && dayType == 2){
-            result = R.raw.night_mostly_cloudy_showers;
+            result = "#4c6f83";
         }else if(category.contains("Partly cloudy") && category.contains("t-storms") && dayType == 2){
-            result = R.raw.night_partly_cloudy_t_storms;
+            result = "#4c6f83";
         }else if(category.contains("Mostly cloudy") && category.contains("t-storms") && dayType == 2){
-            result = R.raw.night_mostly_cloudy_t_storms;
+            result = "#4c6f83";
         }else if(category.contains("Mostly cloudy") && category.contains("flurries") && dayType == 2){
-            result = R.raw.night_mostly_cloudy_flurries;
+            result = "#4c6f83";
         }else if(category.contains("Mostly cloudy") && category.contains("snow") && dayType == 2){
-            result = R.raw.night_mostly_cloudy_snow;
+            result = "#41474b";
+        }else if(dayType == 2){
+            result = "#41474b";
+        } else if (category.equalsIgnoreCase("Mostly Sunny")) {
+            result = "#00bbe3";
+        } else if (category.equalsIgnoreCase("Partly Sunny")) {
+            result = "#00bbe3";;
+        } else if (category.equalsIgnoreCase("Intermittent clouds")) {
+            result = "#00bbe3";
+        } else if (category.equalsIgnoreCase("Hazy Sunshine")) {
+            result = "#00bbe3";
+        } else if (category.equalsIgnoreCase("Mostly Cloudy")) {
+            result = "#00bbe3";
+        } else if (category.equalsIgnoreCase("Cloudy")) {
+            result = "#00bbe3";
+        } else if (category.contains("Dreary")) {
+            result = "#00bbe3";
+        } else if (category.contains("Fog")) {
+            result = "#00bbe3";
+        } else if (category.equalsIgnoreCase("Showers")) {
+            result = "#00bbe3";
+        } else if (category.contains("Mostly cloudy") && category.contains("showers")) {
+            result = "#00bbe3";
+        } else if (category.contains("Partly Sunny") && category.contains("showers")){
+            result = "#00bbe3";
+        } else if ( category.equalsIgnoreCase("T-Storms")){
+            result = "#00bbe3";
+        } else if (category.contains("Mostly cloudy") && category.contains("t-Storms")){
+            result = "#00bbe3";
+        } else if (category.contains("Partly sunny") && category.contains("t-Storms")){
+            result = "#00bbe3";
+        } else if(category.equalsIgnoreCase("Rain")){
+            result = "#00bbe3";
+        } else if(category.equalsIgnoreCase("Flurries")){
+            result = "#00bbe3";
+        } else if(category.contains("Mostly cloudy") && category.contains("flurries")){
+            result = "#00bbe3";
+        }else if(category.contains("Partly sunny") && category.contains("flurries")){
+            result = "#00bbe3";
+        }else if(category.equalsIgnoreCase("Snow")){
+            result = "#00bbe3";
+        }else if(category.contains("Mostly cloudy") && category.contains("snow")){
+            result = "#00bbe3";
+        }else if(category.equalsIgnoreCase("Ice")){
+            result = "#00bbe3";
+        }else if(category.equalsIgnoreCase("Sleet")){
+            result = "#00bbe3";
+        }else if(category.equalsIgnoreCase("Freezing Rain")){
+            result = "#00bbe3";
+        }else if(category.equalsIgnoreCase("Rain and Snow")){
+            result = "#00bbe3";
+        }else if(category.equalsIgnoreCase("Hot")){
+            result = "#00bbe3";
+        }else if(category.equalsIgnoreCase("Cold")){
+            result = "#00bbe3";
+        }else if(category.equalsIgnoreCase("Windy")){
+            result = "#00bbe3";
+        }else if(category.equalsIgnoreCase("Clear")){
+            result = "#00bbe3";
+        }else if(category.equalsIgnoreCase("Mostly Clear")){
+            result = "#00bbe3";
         }
         return result;
     }
