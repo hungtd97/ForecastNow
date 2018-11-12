@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.example.hunghuc.forecastnow.BroadcastReceiver.MyReceiver;
 import com.example.hunghuc.forecastnow.Function.GlobalVariable;
 import com.example.hunghuc.forecastnow.SQLite.SQLiteHelper;
 import com.example.hunghuc.forecastnow.Thread.GetDataCityCurrentLocation;
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 System.out.println("Location not available");
                 System.out.println("Location not available");
             }
-
+            MyReceiver.setupAlarm(getApplicationContext());
             Intent intent = new Intent(this, ForecastActivity.class);
             startActivity(intent);
             finish();

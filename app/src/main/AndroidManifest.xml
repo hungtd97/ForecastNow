@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/>
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <application
         android:name=".Function.GlobalVariable"
         android:allowBackup="true"
@@ -24,6 +27,11 @@
         <activity android:name=".ForecastActivity" />
         <activity android:name=".CityChosenActivity" />
         <activity android:name=".ListCityActivity"></activity>
+        <receiver android:name=".BroadcastReceiver.MyReceiver" />
+        <service
+            android:name=".Service.BackgroundService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>
