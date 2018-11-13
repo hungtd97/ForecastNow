@@ -89,7 +89,25 @@ public class SlideAdapter extends PagerAdapter {
         txtMaxTempe.setText(maxTempe);
         txtRealTempe.setText(realTempe);
         txtChanceRain.setText(chance_rain);
-        txtText.setText(currentCity.getMessage());
+        String mess="";
+        if (currentCity.getChance_rain() <= 20) {
+            if(currentCity.getTemperature_min() >15){
+                mess = ". It's a beautiful day to hang out with friend !";
+            } else {
+                mess = ". It's a little cold out there. Remember to bring a jacket !";
+            }
+        } else if (currentCity.getChance_rain() > 20) {
+            if(currentCity.getTemperature_min() <15){
+                mess = " and there may be rain. It's really cold out side, best weather for staying home and sleep!";
+            }else{
+                mess = " and there may be rain. You should bring a umbrella when going out!";
+            }
+
+        }
+        Function f = new Function();
+        String notiMessage = "The temperature is from " + f.convertIntTempe(currentCity.getTemperature_min()) + "°C to " + f.convertIntTempe(currentCity.getTemperature_max()) + "°C in " + currentCity.getCity_name() + ". " +
+                "The weather is " + currentCity.getMessage() +mess;
+        txtText.setText(notiMessage);
         container.addView(view);
         return view;
     }

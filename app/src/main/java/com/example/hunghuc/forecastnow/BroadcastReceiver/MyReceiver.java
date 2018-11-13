@@ -30,7 +30,7 @@ public class MyReceiver extends WakefulBroadcastReceiver {
         PendingIntent alarmIntent = getStartPendingIntent(context);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
                 getTriggerAt(new Date()),
-                10000,
+                1000,
                 alarmIntent);
     }
 

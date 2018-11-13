@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,12 +25,14 @@ public class ListCityActivity extends AppCompatActivity {
     private ToggleButton toggleButton;
     private SQLiteHelper mySql;
     private boolean tempeType;
+    private City addedCity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_city);
         this.listCity = findViewById(R.id.listUserCity);
         this.toggleButton = findViewById(R.id.toggleBtn);
+        addedCity = new City();
         this.tempeType = ((GlobalVariable) this.getApplication()).isTempeType();
         this.toggleButton.setChecked(tempeType);
         this.toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -55,6 +58,24 @@ public class ListCityActivity extends AppCompatActivity {
         super.onResume();
         UserCityListAdapter adapter = new UserCityListAdapter(this, getUserCity());
         listCity.setAdapter(adapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("addedCity",addedCity);
+        setResult(100,intent);
+        finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println(resultCode);
+        if(requestCode==resultCode){
+            addedCity = (City) data.getSerializableExtra("addedCity");
+            System.out.println(addedCity);
+        }
     }
 
     private int updateTempeType(String value){
@@ -95,6 +116,6 @@ public class ListCityActivity extends AppCompatActivity {
 
     public void AddNewCity(View v){
         Intent intent = new Intent(this, CityChosenActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,200);
     }
 }

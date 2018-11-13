@@ -7,4 +7,6 @@
     <string name="listForecastLb2">Max Tempe</string>
     <string name="listForecastLb3">Real Feel</string>
     <string name="listForecastLb4">Chance of Rain</string>
+    <string name="alarmHOUR">21</string>
+    <string name="alarmMinute">18</string>
 </resources>

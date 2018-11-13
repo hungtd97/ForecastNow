@@ -19,6 +19,7 @@ import com.example.hunghuc.forecastnow.Entity.City;
 import com.example.hunghuc.forecastnow.Entity.Weather;
 import com.example.hunghuc.forecastnow.Function.Function;
 import com.example.hunghuc.forecastnow.MainActivity;
+import com.example.hunghuc.forecastnow.R;
 import com.example.hunghuc.forecastnow.SQLite.SQLiteHelper;
 
 import org.json.JSONArray;
@@ -31,12 +32,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class BackgroundService extends IntentService {
 
     MainActivity activity;
-    NotificationCompat.Builder mBuilder;
     private String channelID = "Notificate";
     private static final int NOTIFICATION_ID = 1;
     private static final String ACTION_START = "ACTION_START";
@@ -44,13 +45,12 @@ public class BackgroundService extends IntentService {
     private SQLiteHelper mySql;
     private boolean checkValidCity = false;
     private boolean checkValidWeather = false;
-    private String api_key = "gYmeORAzigzRmC6cnBfQ2W2HQrp1dXf2";
     private final String API_LINK_ONE_DAY = "http://dataservice.accuweather.com/forecasts/v1/daily/1day/";
     private final String API_LINK_ONE_HOUR = "http://dataservice.accuweather.com/forecasts/v1/hourly/1hour/";
     private final String API_DETAIL = "true";
-    private String notiTitle="";
-    private String notiMessage="";
-    private String notiSmallMess="New Weather Forecast for you";
+    private String notiTitle = "";
+    private String notiMessage = "";
+    private String notiSmallMess = "New Weather Forecast for you";
 
 
     public BackgroundService(MainActivity mainActivity) {
@@ -75,7 +75,7 @@ public class BackgroundService extends IntentService {
         return intent;
     }
 
-    private City getUserCity() {
+    public City getUserCity() {
         System.out.println(">>Geting ");
         checkValidCity = false;
         if (mySql == null) {
@@ -92,7 +92,7 @@ public class BackgroundService extends IntentService {
             String keycode = cursor.getString(cursor.getColumnIndex("keycode"));
             String nation_code = cursor.getString(cursor.getColumnIndex("nation_code"));
             String nation_name = cursor.getString(cursor.getColumnIndex("nation_code"));
-            city = new City(id, city_code, city_name, keycode, nation_code, nation_name,true);
+            city = new City(id, city_code, city_name, keycode, nation_code, nation_name, true);
             checkValidCity = true;
         }
 
@@ -101,11 +101,11 @@ public class BackgroundService extends IntentService {
         return city;
     }
 
-    private void getWeatherForNotification() {
+    public void getWeatherForNotification() {
         System.out.println(">>Geting Weather");
         City city = getUserCity();
-        notiTitle="";
-        notiMessage="";
+        notiTitle = "";
+        notiMessage = "";
         checkValidWeather = false;
         if (checkValidCity == false) {
             return;
@@ -136,22 +136,32 @@ public class BackgroundService extends IntentService {
                     int max_temperature = cursor.getInt(cursor.getColumnIndex("max_tempe"));
                     int realfeel_temperature = cursor.getInt(cursor.getColumnIndex("real_tempe"));
                     int chance_rain = cursor.getInt(cursor.getColumnIndex("chance_rain"));
-                    String messRain=".";
-                    if(chance_rain==0){
-                        messRain=". It's a beautiful day to hang out with friend!";
-                    }else if(chance_rain>30){
-                        messRain=" and there may be rain.";
+                    String messRain = ".";
+                    if (chance_rain <= 20) {
+                        if(min_temperature <15){
+                            messRain = ". It's a beautiful day to hang out with friend !";
+                        } else {
+                            messRain = ". It's a little cold out there. Remember to bring a jacket !";
+                        }
+                    } else if (chance_rain > 20) {
+                        if(min_temperature <15){
+                            messRain = " and there may be rain. It's really cold out side, best weather for staying home and sleep!";
+                        }else{
+                            messRain = " and there may be rain. You should bring a umbrella when going out!";
+                        }
+
                     }
                     weather = new Weather(city.getCity_name(), category, current_temperature, min_temperature, max_temperature, realfeel_temperature, message, chance_rain);
                     Function f = new Function();
-                    notiMessage="The temperature is from "+f.convertIntTempe(min_temperature)+"°C to "+f.convertIntTempe(max_temperature)+"°C in "+city.getCity_name()+". " +
-                            "The weather is "+message.toLowerCase()+" in the day"+messRain;
-                    checkValidWeather=true;
+                    notiMessage = "The temperature is from " + f.convertIntTempe(min_temperature) + "°C to " + f.convertIntTempe(max_temperature) + "°C in " + city.getCity_name() + ". " +
+                            "The weather is " + message.toLowerCase() + " in the day" + messRain;
+                    checkValidWeather = true;
                 } else {
                     try {
                         weather = getWeatherByAPI(city);
-                        checkValidWeather=true;
+                        checkValidWeather = true;
                     } catch (Exception e) {
+                        System.out.println(e);
                         weather = new Weather();
                     }
                 }
@@ -160,9 +170,9 @@ public class BackgroundService extends IntentService {
         }
 
         db.close();
-        if(checkValidWeather){
-            String today= new SimpleDateFormat("dd/MM").format(new Date());
-            notiTitle="Weather Forecast "+today;
+        if (checkValidWeather) {
+            String today = new SimpleDateFormat("dd/MM").format(new Date());
+            notiTitle = "Weather Forecast " + today;
 
         }
     }
@@ -174,14 +184,18 @@ public class BackgroundService extends IntentService {
         try {
             String action = intent.getAction();
             if (ACTION_START.equals(action)) {
-                Date d = new Date();
-                System.out.println(d);
-                if (d.getHours() == 23 && d.getMinutes() == 17) {
+                Calendar cal = Calendar.getInstance();
+                int hour = Integer.parseInt(getResources().getString(R.string.alarmHOUR));
+                int minute = Integer.parseInt(getResources().getString(R.string.alarmMinute));
+                System.out.println(cal.getTime() + ">>>>>>." + cal.HOUR_OF_DAY + "//" + cal.MINUTE);
+                if ((hour == cal.getTime().getHours() && minute == cal.getTime().getMinutes())) {
                     getWeatherForNotification();
-                    if(checkValidWeather){
+                    System.out.println(cal.HOUR_OF_DAY + "");
+                    System.out.println(cal.MINUTE + "");
+                    if (checkValidWeather) {
                         System.out.println("It's Time");
-                        createNotification(notiTitle, notiMessage,notiSmallMess);
-                    }else {
+                        createNotification(notiTitle, notiMessage, notiSmallMess);
+                    } else {
                         System.out.println(">>Error while get API");
                     }
                 }
@@ -194,14 +208,14 @@ public class BackgroundService extends IntentService {
     }
 
 
-    private Weather getWeatherByAPI(City city) throws Exception{
-        String type_day="", category="",message="";
+    public Weather getWeatherByAPI(City city) throws Exception {
+        String type_day = "", category = "", message = "";
         String currentTime = new SimpleDateFormat("HHmm").format(new Date());
         String dataOneDay = "";
         String dataOneHour = "";
-        int chance_rain=-1, current_temperature,realfeel_temperature;
+        int chance_rain = -1, current_temperature, realfeel_temperature;
         //Get data for 1 day
-        String tempURL = API_LINK_ONE_DAY + city.getKeycode() + "?apikey=" + api_key + "&details=" + API_DETAIL;
+        String tempURL = API_LINK_ONE_DAY + city.getKeycode() + "?apikey=" + getResources().getString(R.string.api_key) + "&details=" + API_DETAIL;
         URL url = new URL(tempURL);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         InputStream inputStream = httpURLConnection.getInputStream();
@@ -227,18 +241,27 @@ public class BackgroundService extends IntentService {
         double temp_chance_rain = tempJsonarray.getJSONObject(0).getJSONObject(type_day).getJSONObject("Rain").getDouble("Value");
         temp_chance_rain *= 100;
         chance_rain = (int) temp_chance_rain;
-        String messRain=".";
-        if(chance_rain==0){
-            messRain=". It's a beautiful day to hang out with friend!";
-        }else if(chance_rain>30){
-            messRain=" and there may be rain.";
+        String messRain = ".";
+        if (chance_rain <= 20) {
+            if(min_temperature >15){
+                messRain = ". It's a beautiful day to hang out with friend !";
+            } else {
+                messRain = ". It's a little cold out there. Remember to bring a jacket !";
+            }
+        } else if (chance_rain > 20) {
+            if(min_temperature <15){
+                messRain = " and there may be rain. It's really cold out side, best weather for staying home and sleep!";
+            }else{
+                messRain = " and there may be rain. You should bring a umbrella when going out!";
+            }
+
         }
         Function f = new Function();
-        notiMessage="The temperature is from "+f.convertIntTempe(min_temperature)+"°C to "+f.convertIntTempe(max_temperature)+"°C in "+city.getCity_name()+". " +
-                "The weather is "+message.toLowerCase()+" in the day"+messRain;
+        notiMessage = "The temperature is from " + f.convertIntTempe(min_temperature) + "°C to " + f.convertIntTempe(max_temperature) + "°C in " + city.getCity_name() + ". " +
+                "The weather is " + message.toLowerCase() + " in the day" + messRain;
 
         //Get data for 1 Hour
-        tempURL = API_LINK_ONE_HOUR + city.getKeycode() + "?apikey=" + api_key + "&details=" + API_DETAIL;
+        tempURL = API_LINK_ONE_HOUR + city.getKeycode() + "?apikey=" + getResources().getString(R.string.api_key) + "&details=" + API_DETAIL;
         url = new URL(tempURL);
         httpURLConnection = (HttpURLConnection) url.openConnection();
         inputStream = httpURLConnection.getInputStream();
@@ -264,13 +287,14 @@ public class BackgroundService extends IntentService {
     }
 
 
-    public void createNotification(String title, String content,String smallText) {
+    public void createNotification(String title, String content, String smallText) {
+        NotificationCompat.Builder mBuilder;
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         createNotificationChannel();
         mBuilder = new NotificationCompat.Builder(this, channelID);
-        mBuilder.setSmallIcon(android.support.v4.R.drawable.notification_bg);
+        mBuilder.setSmallIcon(R.mipmap.icon);
         mBuilder.setContentTitle(title);
         mBuilder.setContentText(smallText);
         mBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);

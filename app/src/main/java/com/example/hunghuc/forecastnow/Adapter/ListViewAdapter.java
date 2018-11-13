@@ -1,23 +1,45 @@
 package com.example.hunghuc.forecastnow.Adapter;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hunghuc.forecastnow.BroadcastReceiver.MyReceiver;
 import com.example.hunghuc.forecastnow.CityChosenActivity;
 import com.example.hunghuc.forecastnow.Entity.City;
+import com.example.hunghuc.forecastnow.Entity.Weather;
+import com.example.hunghuc.forecastnow.Function.Function;
+import com.example.hunghuc.forecastnow.MainActivity;
 import com.example.hunghuc.forecastnow.R;
 import com.example.hunghuc.forecastnow.SQLite.SQLiteHelper;
+import com.example.hunghuc.forecastnow.Service.BackgroundService;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ListViewAdapter extends BaseAdapter {
 
@@ -87,6 +109,10 @@ public class ListViewAdapter extends BaseAdapter {
                     long result = db.insert("City", null, values);
                     if (result != 0) {
                         Toast.makeText(cityChosenActivity, "Add new city successfully", Toast.LENGTH_LONG).show();
+                        System.out.println(">>>>>>>>Return to Home");
+                        Intent intent = new Intent();
+                        intent.putExtra("addedCity",listCity.get(position));
+                        cityChosenActivity.setResult(200, intent);
                         cityChosenActivity.finish();
                     }
                 }else{
@@ -125,6 +151,10 @@ public class ListViewAdapter extends BaseAdapter {
                     long result = db.insert("City", null, values);
                     if (result != 0) {
                         Toast.makeText(cityChosenActivity, "Add new city successfully", Toast.LENGTH_LONG).show();
+                        System.out.println(">>>>>>>>Return to Home");
+                        Intent intent = new Intent();
+                        intent.putExtra("addedCity",listCity.get(position));
+                        cityChosenActivity.setResult(200, intent);
                         cityChosenActivity.finish();
                     }
                 }else{
@@ -139,4 +169,5 @@ public class ListViewAdapter extends BaseAdapter {
         public TextView txtCityName;
         public TextView txtNationName;
     }
+
 }

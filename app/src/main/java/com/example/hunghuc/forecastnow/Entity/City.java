@@ -1,6 +1,8 @@
 package com.example.hunghuc.forecastnow.Entity;
 
-public class City {
+import java.io.Serializable;
+
+public class City implements Serializable {
     private int id;
     private String city_code;
     private String city_name;
@@ -8,6 +10,9 @@ public class City {
     private String nation_code;
     private String nation_name;
     private boolean current_location_flag;
+
+    public City() {
+    }
 
     public City(int id, String city_code, String city_name, String keycode, String nation_code, String nation_name, boolean current_location_flag) {
         this.id = id;
@@ -81,5 +86,18 @@ public class City {
 
     public void setNation_name(String nation_name) {
         this.nation_name = nation_name;
+    }
+
+    @Override
+    public String toString() {
+        return "City{" +
+                "id=" + id +
+                ", city_code='" + city_code + '\'' +
+                ", city_name='" + city_name + '\'' +
+                ", keycode='" + keycode + '\'' +
+                ", nation_code='" + nation_code + '\'' +
+                ", nation_name='" + nation_name + '\'' +
+                ", current_location_flag=" + current_location_flag +
+                '}';
     }
 }

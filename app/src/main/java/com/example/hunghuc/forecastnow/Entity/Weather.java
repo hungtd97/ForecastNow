@@ -164,4 +164,22 @@ public class Weather {
     public void setTemperature_type(String temperature_type) {
         this.temperature_type = temperature_type;
     }
+
+    @Override
+    public String toString() {
+        return "Weather{" +
+                "city_name='" + city_name + '\'' +
+                ", category='" + category + '\'' +
+                ", category_day='" + category_day + '\'' +
+                ", category_night='" + category_night + '\'' +
+                ", temperature_current=" + temperature_current +
+                ", temperature_min=" + temperature_min +
+                ", temperature_max=" + temperature_max +
+                ", temperature_realfeel=" + temperature_realfeel +
+                ", message='" + message + '\'' +
+                ", temperature_type='" + temperature_type + '\'' +
+                ", chance_rain=" + chance_rain +
+                ", location_time=" + location_time +
+                '}';
+    }
 }
